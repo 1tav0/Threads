@@ -20,15 +20,17 @@ void run(int count){
   while(count --> 0)
     std::cout << count << " Hello World" << std::endl;
   std::this_thread::sleep_for(3000ms);
+  std::cout << "Thread is finished" << std::endl;
 }
 
 int main(){
   std::thread t1(run, 10);
   std::cout << "main" << std::endl;
-  t1.join();
-  //check if join before to avoid double joinin
+  //detach this thread from the main thread means it wont be waiting for the thread to finsih 
+  t1.detach();
+  //to avoid double detach
   if(t1.joinable()){
-    t1.join();
+    t1.detach();
   }
   std::cout << "main after" << std::endl;
 
