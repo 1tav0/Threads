@@ -17,24 +17,37 @@
 #include <iostream>
 #include <thread>
 #include <mutex>
-
+#include <string>
+using namespace std::chrono_literals;
 int myAmount = 0;
 
 std::mutex moneyMutex;
-void addMoney(){
-  //moneyMutex.lock();
-  ++myAmount; //critical region/section for the race condition
-  //moneyMutex.unlock();
+void addMoney(int x){
+  moneyMutex.lock();
+  myAmount += x; //critical region/section for the race condition
+  std::this_thread::sleep_for(1000ms);
+  std::cout << myAmount << std::endl;
+  moneyMutex.unlock();
+}
+
+void driveCar(std::string name){
+  moneyMutex.lock();
+  std::cout << name << " is driving" << std::endl;
+  std::this_thread::sleep_for(1000ms);
+  std::cout << name << " is done driving" << std::endl;
+  moneyMutex.unlock();
 }
 
 int main(){
-  std::thread t1(addMoney);
-  std::thread t2(addMoney);
+  // std::thread t1(driveCar,"tavo");
+  // std::thread t2(driveCar, "bob");
 
-  t1.join();
-  t2.join();
-
-  std::cout << myAmount << std::endl;
+  std::thread t3(addMoney, 1);
+  std::thread t4(addMoney, 2);
+  // t1.join();
+  // t2.join();
+  t3.join();
+  t4.join();
 
   return 0;
 }
