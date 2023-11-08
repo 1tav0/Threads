@@ -37,6 +37,7 @@ void consumeXY()
   while (true)
   {
     //If std::try_lock successfully locks both m1 and m2, it proceeds to the next step, indicating that no other thread has currently locked these mutexes.
+    //To safely manipulate both X and Y concurrently, you use std::try_lock to ensure that both m1 and m2 can be locked simultaneously. If std::try_lock succeeds in locking both mutexes at the same time, it means that the thread has exclusive access to both X and Y, and you can safely manipulate them without any risk of data race or inconsistency.
     int lockResult = std::try_lock(m1, m2);
     if (lockResult == -1)
     {
